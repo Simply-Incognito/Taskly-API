@@ -1,0 +1,65 @@
+# Visual Studio / Rider / VS Code
+.vs/
+.idea/
+.vscode/
+
+# Build artifacts
+bin/
+obj/
+out/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+*.sln.iml
+
+# Dotnet / NuGet
+*.nupkg
+packages/
+.nuget/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ASP.NET
+appsettings.*.json
+appsettings.Development.json
+secrets.json
+secrets.*.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Coverage
+coverage*.xml
+*.coverage
+*.coveragexml
+
+# Test result files
+TestResults/
+
+# JetBrains Rider caches
+.idea/
+
+# Resharper
+_ReSharper*/
+*.DotSettings.user
+
+# Misc
+*.vsix
+*.db
+*.db-journal
+*.pfx
+
+# Local environment files (if any)
+.env
+.env.local
