@@ -18,6 +18,7 @@ Simple task management REST API built with ASP.NET Core (.NET 10).
 2. Restore and build:
    - `dotnet restore`
    - `dotnet build`
+	- https://github.com/Simply-Incognito/Taskly-API
 
 3. Run:
    - `dotnet run --project Taskly` (or open solution in Visual Studio and press F5)
