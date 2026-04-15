@@ -1,9 +1,9 @@
-# Taskly
+# TaskCoreAPI
 
 Simple task management REST API built with ASP.NET Core (.NET 10).
 
 ## Overview
-`Taskly` exposes endpoints to create, read, update, and delete task items.
+`TaskCoreAPI` exposes endpoints to create, read, update, and delete task items.
 
 ## Prerequisites
 - Visual Studio 2026 or later (with .NET 10 workload)
@@ -21,14 +21,14 @@ Simple task management REST API built with ASP.NET Core (.NET 10).
 	- https://github.com/Simply-Incognito/Taskly-API
 
 3. Run:
-   - `dotnet run --project Taskly` (or open solution in Visual Studio and press F5)
+   - `dotnet run --project TaskCoreAPI` (or open solution in Visual Studio and press F5)
 
 4. Open the API
    - Default launch URL: `https://localhost:{port}/api/tasks`
 
 ## Working with Visual Studio 2026
 - Open the `.sln` in Visual Studio 2026.
-- Ensure the startup project is set to `Taskly`.
+- Ensure the startup project is set to `TaskCoreAPI`.
 - Use the debugger or IIS Express profile as needed.
 
 ## Testing
