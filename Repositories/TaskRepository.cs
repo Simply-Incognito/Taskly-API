@@ -1,4 +1,5 @@
 using Taskly.Models;
+using TaskCoreAPI.Exceptions;
 
 namespace Taskly.Repositories
 {
@@ -10,31 +11,15 @@ namespace Taskly.Repositories
         {
             return _taskItems.FirstOrDefault(i => i.Id == id)!;
         }
-
         public async Task<TaskItem> CreateTaskAsync(TaskItem newTaskItem)
         {
             newTaskItem.Id = _taskItems.Count + 1;
-            newTaskItem.IsCompleted = false;
 
             _taskItems.Add(newTaskItem);
 
             return newTaskItem;
         }
-        public async Task UpdateTaskAsync(TaskItem updatedTaskItem)
-        {
-            var taskItem = await GetTaskByIdAsync(updatedTaskItem.Id);
-
-            if (taskItem != null)
-            {
-                _taskItems[taskItem.Id - 1] = updatedTaskItem;
-            }
-        }
-        public async Task DeleteTaskAsync(int id)
-        {
-            var taskItem = await GetTaskByIdAsync(id);
-
-            if (taskItem != null) _taskItems.Remove(taskItem);
-        }
-  
+        public async Task UpdateTaskAsync(TaskItem updatedTaskItem) => _taskItems[updatedTaskItem.Id - 1] = updatedTaskItem;
+        public async Task DeleteTaskAsync(TaskItem taskItem) => _taskItems.Remove(taskItem);
     }
 }

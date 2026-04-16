@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using TaskCoreAPI.Exceptions;
 using Taskly.Models;
 using Taskly.Services;
 
@@ -29,66 +31,88 @@ namespace Taskly.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult<TaskItem>> GetTaskByIdAsync(int id)
         {
-            var taskItem = await _taskItemService.GetTaskByIdAsync(id);
-            if (taskItem == null) return NotFound();
-
-            return Ok(taskItem);
+            TaskItem taskItem;
+            try
+            {
+                taskItem = await _taskItemService.GetTaskByIdAsync(id);
+                return Ok(taskItem);
+            }  catch (NotFoundException)
+            {
+                //return NotFound(ex.Message);
+                throw;
+            }  catch (Exception)
+            {
+                throw;
+            }
         }
 
         // Get Completed Tasks
         [HttpGet("completed")]
         public async Task<ActionResult<TaskItem>> GetAllCompletedTasksAsync()
         {
-            var completedTasks = (await _taskItemService.GetAllTasksAsync()).Where(item => item.IsCompleted == true);
-
-            return Ok(completedTasks);
+            IEnumerable<TaskItem> completedTasks;
+            try
+            {
+                completedTasks = await _taskItemService.GetCompletedTasks();
+                return Ok(completedTasks);
+            } catch(Exception)
+            {
+                throw;
+            }         
         }
 
         // Create Task
         [HttpPost]
         public async Task<ActionResult<TaskItem>> CreateTaskAsync([FromBody] TaskItem newTaskItem)
         {
-            if (newTaskItem == null || string.IsNullOrEmpty(newTaskItem.Title)) return BadRequest();
+            try
+            {
+                newTaskItem = await _taskItemService.CreateTaskAsync(newTaskItem);
 
-            newTaskItem = await _taskItemService.CreateTaskAsync(newTaskItem);
-
-            // Use action name without the 'Async' suffix and explicitly name the route value 'id'
-            return CreatedAtAction(nameof(GetTaskByIdAsync).Replace("Async", ""), new { id = newTaskItem.Id }, newTaskItem);
+                // Use action name without the 'Async' suffix and explicitly name the route value 'id'
+                return CreatedAtAction(nameof(GetTaskByIdAsync).Replace("Async", ""), new { id = newTaskItem.Id }, newTaskItem);
+            }
+            catch (NotFoundException)
+            {
+                throw;
+            } catch(Exception)
+            {
+                throw;
+            }
         }
 
         // Update Task
         [HttpPut("{id:int}")]
         public async Task<ActionResult<TaskItem>> UpdateTaskAsync(int id, [FromBody] TaskItem updatedTaskItem)
-        {
-            var existingTask = await _taskItemService.GetTaskByIdAsync(id);
-            
-            if (existingTask == null)
+        {        
+           try
             {
-                return NotFound();
-            } else if (updatedTaskItem == null || string.IsNullOrEmpty(updatedTaskItem.Title))
+                return Ok(await _taskItemService.UpdateTaskAsync(id, updatedTaskItem));
+            } catch (NotFoundException)
             {
-                return BadRequest();
+                throw;
+            } catch (Exception)
+            {
+                throw;
             }
-
-            updatedTaskItem.Id = id;
-
-            await _taskItemService.UpdateTaskAsync(updatedTaskItem);
-
-            return Ok(updatedTaskItem);
-            
         }
 
         // Delete task
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteTaskAsync(int id)
         {
-            var taskItem = await _taskItemService.GetTaskByIdAsync(id);
+            try
+            {
+                await _taskItemService.DeleteTaskAsync(id);
 
-            if (taskItem == null) return NotFound();
-
-            await _taskItemService.DeleteTaskAsync(id);
-
-            return NoContent();
+                return NoContent();
+            } catch (NotFoundException)
+            {
+                throw;
+            } catch (Exception)
+            {
+                throw;
+            }  
         } 
 
 

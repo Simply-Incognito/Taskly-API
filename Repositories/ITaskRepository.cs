@@ -8,6 +8,6 @@ namespace Taskly.Repositories
         Task<TaskItem> GetTaskByIdAsync(int id);
         Task<TaskItem> CreateTaskAsync(TaskItem taskItem);
         Task UpdateTaskAsync(TaskItem taskItem);
-        Task DeleteTaskAsync(int id);
+        Task DeleteTaskAsync(TaskItem taskItem);
     }
 }

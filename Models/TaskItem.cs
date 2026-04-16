@@ -4,7 +4,7 @@ namespace Taskly.Models
     {
         public int Id { get; set; } = default;
         public string Title { get; set; } = string.Empty;
-        public bool IsCompleted { get; set; } = default;
+        public bool IsCompleted { get; set; } = false;
 
         public DateTime CreatedAt { get; } = DateTime.Now;
     }
