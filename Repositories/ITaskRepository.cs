@@ -4,10 +4,10 @@ namespace Taskly.Repositories
 {
     public interface ITaskRepository
     {
-        List<TaskItem> GetAllTasks();
-        TaskItem GetTaskById(int id);
-        TaskItem CreateTask(TaskItem taskItem);
-        void UpdateTask(TaskItem taskItem);
-        void DeleteTask(int id);
+        Task<List<TaskItem>> GetAllTasksAsync();
+        Task<TaskItem> GetTaskByIdAsync(int id);
+        Task<TaskItem> CreateTaskAsync(TaskItem taskItem);
+        Task UpdateTaskAsync(TaskItem taskItem);
+        Task DeleteTaskAsync(int id);
     }
 }

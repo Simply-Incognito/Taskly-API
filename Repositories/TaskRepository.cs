@@ -5,9 +5,13 @@ namespace Taskly.Repositories
     public class TaskRepository : ITaskRepository
     {
         private readonly List<TaskItem> _taskItems = new List<TaskItem>();
-        public List<TaskItem> GetAllTasks() => _taskItems;
-        public TaskItem GetTaskById(int id) => _taskItems.FirstOrDefault(i => i.Id == id)!;
-        public TaskItem CreateTask(TaskItem newTaskItem)
+        public async Task<List<TaskItem>> GetAllTasksAsync() => _taskItems;
+        public async Task<TaskItem> GetTaskByIdAsync(int id)
+        {
+            return _taskItems.FirstOrDefault(i => i.Id == id)!;
+        }
+
+        public async Task<TaskItem> CreateTaskAsync(TaskItem newTaskItem)
         {
             newTaskItem.Id = _taskItems.Count + 1;
             newTaskItem.IsCompleted = false;
@@ -16,18 +20,18 @@ namespace Taskly.Repositories
 
             return newTaskItem;
         }
-        public void UpdateTask(TaskItem updatedTaskItem)
+        public async Task UpdateTaskAsync(TaskItem updatedTaskItem)
         {
-            var taskItem = GetTaskById(updatedTaskItem.Id);
+            var taskItem = await GetTaskByIdAsync(updatedTaskItem.Id);
 
             if (taskItem != null)
             {
                 _taskItems[taskItem.Id - 1] = updatedTaskItem;
             }
         }
-        public void DeleteTask(int id)
+        public async Task DeleteTaskAsync(int id)
         {
-            var taskItem = GetTaskById(id);
+            var taskItem = await GetTaskByIdAsync(id);
 
             if (taskItem != null) _taskItems.Remove(taskItem);
         }

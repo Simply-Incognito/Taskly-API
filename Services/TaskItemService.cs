@@ -13,10 +13,10 @@ namespace Taskly.Services
             _repository = repository;
         }
 
-        public List<TaskItem> GetAllTasks() => _repository.GetAllTasks();
-        public TaskItem GetTaskById(int id) => _repository.GetTaskById(id);
-        public TaskItem CreateTask(TaskItem newTaskItem) => _repository.CreateTask(newTaskItem);
-        public void UpdateTask(TaskItem newTaskItem) => _repository.UpdateTask(newTaskItem);
-        public void DeleteTask(int id) => _repository.DeleteTask(id);
+        public async Task<List<TaskItem>> GetAllTasksAsync() => await _repository.GetAllTasksAsync();
+        public async Task<TaskItem> GetTaskByIdAsync(int id) => await _repository.GetTaskByIdAsync(id);
+        public async Task<TaskItem> CreateTaskAsync(TaskItem newTaskItem) => await _repository.CreateTaskAsync(newTaskItem);
+        public async Task UpdateTaskAsync(TaskItem newTaskItem) => await _repository.UpdateTaskAsync(newTaskItem);
+        public async Task DeleteTaskAsync(int id) => await _repository.DeleteTaskAsync(id);
     }
 }

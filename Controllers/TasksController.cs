@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Taskly.Models;
 using Taskly.Services;
@@ -18,16 +20,16 @@ namespace Taskly.Controllers
 
         // Get All Tasks
         [HttpGet]
-        public ActionResult<List<TaskItem>> GetAllTasks()
+        public async Task<ActionResult<List<TaskItem>>> GetAllTasksAsync()
         {
-            return Ok(_taskItemService.GetAllTasks());
+            return Ok(await _taskItemService.GetAllTasksAsync());
         }
 
         // Get Task By ID
         [HttpGet("{id:int}")]
-        public ActionResult<TaskItem> GetTaskById(int id)
+        public async Task<ActionResult<TaskItem>> GetTaskByIdAsync(int id)
         {
-            var taskItem = _taskItemService.GetTaskById(id);
+            var taskItem = await _taskItemService.GetTaskByIdAsync(id);
             if (taskItem == null) return NotFound();
 
             return Ok(taskItem);
@@ -35,27 +37,30 @@ namespace Taskly.Controllers
 
         // Get Completed Tasks
         [HttpGet("completed")]
-        public ActionResult<TaskItem> GetAllCompletedTasks()
+        public async Task<ActionResult<TaskItem>> GetAllCompletedTasksAsync()
         {
-            var completedTasks = _taskItemService.GetAllTasks().FindAll(task => task.IsCompleted == true);
+            var completedTasks = (await _taskItemService.GetAllTasksAsync()).Where(item => item.IsCompleted == true);
 
             return Ok(completedTasks);
         }
 
         // Create Task
         [HttpPost]
-        public ActionResult<TaskItem> CreateTask([FromBody] TaskItem newTaskItem)
+        public async Task<ActionResult<TaskItem>> CreateTaskAsync([FromBody] TaskItem newTaskItem)
         {
-            newTaskItem = _taskItemService.CreateTask(newTaskItem);
+            if (newTaskItem == null || string.IsNullOrEmpty(newTaskItem.Title)) return BadRequest();
 
-            return CreatedAtAction(nameof(GetTaskById), new { newTaskItem.Id }, newTaskItem);
+            newTaskItem = await _taskItemService.CreateTaskAsync(newTaskItem);
+
+            // Use action name without the 'Async' suffix and explicitly name the route value 'id'
+            return CreatedAtAction(nameof(GetTaskByIdAsync).Replace("Async", ""), new { id = newTaskItem.Id }, newTaskItem);
         }
 
         // Update Task
         [HttpPut("{id:int}")]
-        public ActionResult<TaskItem> UpdateTask(int id, [FromBody] TaskItem updatedTaskItem)
+        public async Task<ActionResult<TaskItem>> UpdateTaskAsync(int id, [FromBody] TaskItem updatedTaskItem)
         {
-            var existingTask = _taskItemService.GetTaskById(id);
+            var existingTask = await _taskItemService.GetTaskByIdAsync(id);
             
             if (existingTask == null)
             {
@@ -67,7 +72,7 @@ namespace Taskly.Controllers
 
             updatedTaskItem.Id = id;
 
-            _taskItemService.UpdateTask(updatedTaskItem);
+            await _taskItemService.UpdateTaskAsync(updatedTaskItem);
 
             return Ok(updatedTaskItem);
             
@@ -75,13 +80,13 @@ namespace Taskly.Controllers
 
         // Delete task
         [HttpDelete("{id:int}")]
-        public IActionResult DeleteTask(int id)
+        public async Task<IActionResult> DeleteTaskAsync(int id)
         {
-            var taskItem = _taskItemService.GetTaskById(id);
+            var taskItem = await _taskItemService.GetTaskByIdAsync(id);
 
             if (taskItem == null) return NotFound();
 
-            _taskItemService.DeleteTask(id);
+            await _taskItemService.DeleteTaskAsync(id);
 
             return NoContent();
         } 
