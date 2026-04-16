@@ -14,7 +14,7 @@ namespace Taskly.Controllers
         private readonly ITaskItemService _taskItemService;
         public TasksController(ITaskItemService taskItemService)
         {
-            _taskItemService = taskItemService ?? throw new ArgumentNullException(nameof(taskItemService));
+            _taskItemService = taskItemService;
         }
 
 

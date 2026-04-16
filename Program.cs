@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+builder.Services.AddSingleton<ITaskRepository, TaskRepository>();
 // TaskItemService depends on ITaskRepository (scoped). Use scoped lifetime to avoid consuming a scoped service from a singleton.
 builder.Services.AddScoped<ITaskItemService, TaskItemService>();
 
